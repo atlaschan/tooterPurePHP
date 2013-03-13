@@ -32,7 +32,7 @@ class tooter_controller_SignUpController
 		
 		//$returnStatus = array();
 		try{
-			$userName = strtolower($user->getFirstName()) + strtolower($user->getLastName());
+			$userName = strtolower($user->getFirstName()).strtolower($user->getLastName());
 			
 			// Create the account in the Directory where the Tooter application belongs.
 			$directory = $this->stormpath->getDataStore()->getResource($this->stormpath->getDirectoryURL(), Services_Stormpath::DIRECTORY);
