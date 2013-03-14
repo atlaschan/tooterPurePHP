@@ -124,7 +124,8 @@ class HTTP_Request2_SocketWrapper
      */
     public function __destruct()
     {
-        fclose($this->socket);
+		if($this->socket)
+			fclose($this->socket);
     }
 
     /**

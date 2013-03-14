@@ -17,15 +17,14 @@ class tooter_util_PermissionUtil
 	public function hasRole($user, $role)
 	{
 		$hasRole = false;
-		
 		$memberships = $user->getAccount()->getGroupMemberships();
 		foreach($memberships as $membership)
 		{
-			$groupHref = $memberships->getGroup()->getHref();
+			$groupHref = $membership->getGroup()->getHref();
 			if($role == "ADMINISTRATOR")
-				$hasRole = ($groupHref == $administratorGroupURL);
+				$hasRole = ($groupHref == $this->administratorGroupURL);
 			else if($role == "PREMIUM_USER")
-				$hasRole = ($groupHref == $premiumGroupURL);
+				$hasRole = ($groupHref == $this->premiumGroupURL);
 		}
 		return $hasRole;
 	}

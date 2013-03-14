@@ -44,9 +44,19 @@ class tooter_controller_SignUpController
 			$account->setSurname($user->getLastName());
 			$account->setUsername($userName);
 			
-			$account = $directory->createAccount($account);
+			$directory->createAccount($account); //$account = The method return one NULL VALUE !!!
+			
+			//adding group after the account has been created
+			$groupUrl = $user->getGroupUrl();
+			if(!empty($groupUrl))
+			{
+				$dataStore = $this->stormpath->getDataStore();
+				$group = $dataStore->getResource($groupUrl, Services_Stormpath::GROUP);
+				$account->addGroup($group);
+			}
 			
 			$user->setUserName($userName);
+			$user->setAccount($account);
 			$this->customerDao->save($user);
 			
 			$status->setStatus(Tooter_Service::SUCCESS);

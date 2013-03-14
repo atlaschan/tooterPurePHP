@@ -212,7 +212,7 @@ class tooter_model_User
 	 
 	 public function getGroupUrl()
 	 {
-		return $this->groupUrl();
+		return $this->groupUrl;
 	 }
 	 
 	 

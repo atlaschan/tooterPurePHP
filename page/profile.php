@@ -9,6 +9,28 @@
 	else
 		$user = $_SESSION["user"];
 	
+	$updateProfile = false;
+	if(isset($_POST["firstName"]))
+	{
+		$modifiedUser = new tooter_model_User;
+		$modifiedUser->setFirstName($_POST["firstName"]);
+		$modifiedUser->setLastName($_POST["lastName"]);
+		$modifiedUser->setEmail($_POST["email"]);
+		$modifiedUser->setGroupUrl($_POST["groupUrl"]);
+		
+		$controller = new tooter_controller_ProfileController($stormpath);
+		
+		$status = $controller->submit($user, $modifiedUser);
+		if($status->getStatus() == Tooter_Service::FAILED)
+			$error = $status->getError();
+		
+		$updateProfile = true;
+		
+	}
+	
+	$permissionUtil = new tooter_util_PermissionUtil($application_property);
+	$isAdmin = $permissionUtil->hasRole($user, "ADMINISTRATOR");
+	$isPremium = $permissionUtil->hasRole($user, "PREMIUM_USER");
 	
 ?>
 <html>
@@ -44,7 +66,18 @@
                 
                 
                 <div class="control-group">
-                    
+                    <?php
+						if(!empty($error))
+						{
+							$id = $error->getId();
+							$styleClass = $error->getStyleClass();
+							$errorMessage = $messages[$error->getMessage()];
+							echo "<div id=\"$id\" class=\"$styleClass\">$errorMessage</div>";
+						} 
+						else if($updateProfile)
+							echo '<div>'.$messages["profile.message.updated"].'</div>'
+						
+					?>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for="firstName"><?php echo $messages["customer.first.name"] ?></label>
@@ -61,13 +94,16 @@
                 <div class="control-group">
                     <label class="radio inline" style="margin-left: -18px !important;"><?php echo $messages["customer.account.type"] ?>:</label>&nbsp;
                     <label class="radio inline">
-                        <input id="groupUrl1" name="groupUrl" class="radio" type="radio" value="PUT THE REST URL TO A GROUP FOR ADMINISTRATOR LEVEL HERE -- THIS GROUP MUST EXIST IN THE DIRECTORY LISTED ABOVE"/> Administrator
+                        <input id="groupUrl1" name="groupUrl" class="radio" type="radio" value="<?=$application_property["stormpath.sdk.administrator.rest.url"]?>"
+						<?php if($isAdmin) echo 'checked="checked"';?>/> Administrator
                     </label>
                     <label class="radio inline">
-                        <input id="groupUrl2" name="groupUrl" class="radio" type="radio" value="PUT THE REST URL TO A GROUP FOR ADMINISTRATOR LEVEL HERE -- THIS GROUP MUST EXIST IN THE DIRECTORY LISTED ABOVE"/> Premium
+                        <input id="groupUrl2" name="groupUrl" class="radio" type="radio" value="<?=$application_property["stormpath.sdk.premium.rest.url"]?>"
+						<?php if($isPremium) echo 'checked="checked"';?>/> Premium
                     </label>
                     <label class="radio inline">
-                        <input id="groupUrl3" name="groupUrl" class="radio" type="radio" value="" checked="checked"/> Basic
+                        <input id="groupUrl3" name="groupUrl" class="radio" type="radio" value="" 
+						<?php if($isPremium == false and $isAdmin == false) echo 'checked="checked"';?>/> Basic
                     </label>
                 </div>
                 <div class="control-group">
