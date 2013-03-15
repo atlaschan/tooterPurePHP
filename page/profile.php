@@ -49,7 +49,7 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">atlas chan <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#" id="showAccountTypes"><?php echo $messages["customer.account.type"] ?>: Basic</a></li>
+                    <li><a href="#" id="showAccountTypes"><?php echo $messages["customer.account.type"] ?>: <?php if($isAdmin) echo "Administrator"; else if($isPremium) echo "Premium"; else echo "Basic";   ?></a></li>
                     <li class="divider"></li>
                     <li class="nav-header"></li>
                     <li><a href="logout.php"><?php echo $messages["tooter.logout"] ?></a></li>
