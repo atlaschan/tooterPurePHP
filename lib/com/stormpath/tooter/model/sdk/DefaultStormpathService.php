@@ -43,7 +43,7 @@ class tooter_model_sdk_DefaultStormpathService implements tooter_model_sdk_Storm
 		$obj->administratorGroupURL = $application_property["stormpath.sdk.administrator.rest.url"];
 		$obj->premiumGroupURL = $application_property["stormpath.sdk.premium.rest.url"];
 		
-		$obj->connector = new tooter_util_Connector($application_property["stormpath.sdk.tooter.username"], $application_property["stormpath.sdk.tooter.password"], $application_property["stormpath.sdk.tooter.database"]);
+		$obj->connector = new tooter_util_Connector();
 		
 		return $obj;
 	}

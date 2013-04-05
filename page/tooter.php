@@ -22,6 +22,11 @@
 		
 		if($status->getStatus() == Tooter_Service::FAILED)
 			$error = $status->getError();
+	} 
+	else
+	{
+		$controller = new tooter_controller_TootController($stormpath);
+		$controller->retrieveToots();
 	}
 	
 	$permissionUtil = new tooter_util_PermissionUtil($application_property);
@@ -73,7 +78,7 @@
 					?>
 
                     <div class="control-group">
-                        <textarea id="tootMessage" name="tootMessage" maxlength="160" placeholder="Compose your toot here..." rows="3"><?=isset($_POST["tootMessage"])?$_POST["tootMessage"]:""?></textarea>
+                        <textarea id="tootMessage" name="tootMessage" maxlength="160" placeholder="Compose your toot here..." rows="3"><?=(isset($_POST["tootMessage"]) and !empty($error)) ? $_POST["tootMessage"]: ""?></textarea>
                     </div>
                     <div class="control-group">
                         <div class="controls">

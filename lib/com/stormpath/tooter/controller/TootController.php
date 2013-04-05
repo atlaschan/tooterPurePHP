@@ -16,6 +16,7 @@ class tooter_controller_TootController
 		
 		//init the persistence layer
 		$this->tootDao = new tooter_model_dao_DefaultTootDao($stormpath->getConnector());
+		$this->customerDao = new tooter_model_dao_DefaultCustomerDao($stormpath->getConnector());
 		
 		$this->tootValidator = new tooter_validator_TootValidator();
 	}
@@ -61,6 +62,21 @@ class tooter_controller_TootController
 		}
 		
 		return $status;
+	}
+	
+	public function retrieveToots()
+	{
+		$user = $_SESSION["user"];
+		$customer = $this->customerDao->getCustomerByUserName($user->getUserName());
+		
+		$tootList = $this->tootDao->getTootsByUserId($customer->getId());
+
+		foreach ($tootList as $key=>$itemToot) {
+			$itemToot->setCustomer($user);
+		}
+
+		krsort($tootList, SORT_NUMERIC);
+		$user->setTootList($tootList);
 	}
 	
 	
